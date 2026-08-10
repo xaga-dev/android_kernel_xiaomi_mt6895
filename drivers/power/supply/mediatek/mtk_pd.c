@@ -1203,6 +1203,8 @@ static void mtk_pd_parse_dt(struct mtk_pd *pd,
 			PD_SC_INPUT_CURRENT);
 		pd->sc_input_current = PD_SC_INPUT_CURRENT;
 	}
+	if (pd->sc_input_current < 3000000)
+		pd->sc_input_current = 3000000;
 
 	if (of_property_read_u32(np, "sc_charger_current", &val) >= 0) {
 		pd->sc_charger_current = val;

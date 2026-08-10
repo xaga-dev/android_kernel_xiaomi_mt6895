@@ -693,7 +693,7 @@ static int pdm_tune_pdo(struct usbpd_pm *pdpm)
 	pdpm->ibat_step = pdpm->vbat_step = pdpm->ibus_step = pdpm->vbus_step = 0;
 	ibus_limit = min(min((pdpm->target_fcc / res + pdpm->ibus_gap), apdo_max_ibus_temp), pdpm->dts_config.max_ibus);
 	if (pdpm->apdo_max_ibus <= 3000)
-		ibus_limit = min(ibus_limit, pdpm->apdo_max_ibus - 200);
+		ibus_limit = min(ibus_limit, pdpm->apdo_max_ibus);
 	vbus_limit = min(pdpm->dts_config.max_vbus, pdpm->apdo_max_vbus);
 
 #if  defined(CONFIG_TARGET_PRODUCT_ARISTOTLE)
@@ -1343,6 +1343,8 @@ static int pd_policy_parse_dt(struct usbpd_pm *pdpm)
 	rc = of_property_read_u32(node, "max_fcc", &pdpm->dts_config.max_fcc);
 	rc = of_property_read_u32(node, "max_vbus", &pdpm->dts_config.max_vbus);
 	rc = of_property_read_u32(node, "max_ibus", &pdpm->dts_config.max_ibus);
+	if (rc || pdpm->dts_config.max_ibus < 3000)
+		pdpm->dts_config.max_ibus = 3000;
 	rc = of_property_read_u32(node, "fcc_low_hyst", &pdpm->dts_config.fcc_low_hyst);
 	rc = of_property_read_u32(node, "fcc_high_hyst", &pdpm->dts_config.fcc_high_hyst);
 	rc = of_property_read_u32(node, "low_tbat", &pdpm->dts_config.low_tbat);
